@@ -3,15 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>আপনার লটারি · টিকিট বুকিং</title>
-  <!-- Tailwind via CDN + basic inter activity -->
+  <title>4S Online Marketplace · লটারি বুকিং</title>
+  <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome for icons (optional but nice) -->
+  <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- EmailJS library (free client-side) -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
-    /* smooth loading / hover effects */
     .card-hover { transition: all 0.2s ease; }
     .card-hover:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.02); }
     .tracking-id { font-family: 'Courier New', monospace; letter-spacing: 1px; }
@@ -22,15 +19,27 @@
   <!-- main container (max width) -->
   <div class="w-full max-w-4xl">
 
-    <!-- header / title -->
+    <!-- header with logo and slogan -->
     <div class="text-center mb-8">
-      <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-red-700 drop-shadow-md">
+      <!-- logo display -->
+      <div class="flex justify-center mb-3">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-6 rounded-full inline-flex items-center gap-3 shadow-lg">
+          <i class="fas fa-crown text-yellow-300 text-2xl"></i>
+          <span class="text-2xl tracking-wider">ONLINE MARKETPLACE</span>
+          <i class="fas fa-store text-yellow-300 text-2xl"></i>
+        </div>
+      </div>
+      <!-- slogan -->
+      <p class="text-xl text-gray-700 font-semibold mt-2 bg-white/60 inline-block px-6 py-2 rounded-full backdrop-blur-sm">
+        4S Online marketplace এর পক্ষ থেকে এই লটারিটা
+      </p>
+      <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-red-700 drop-shadow-md mt-4">
         🎰 স্বপ্ন লটারি
       </h1>
       <p class="text-gray-700 text-lg mt-2">৫ টাকায় সুযোগ — আপনার ভাগ্য আজ খুলতে পারে!</p>
     </div>
 
-    <!-- prize & bKash info cards (landing style) -->
+    <!-- prize & payment info cards -->
     <div class="grid md:grid-cols-2 gap-5 mb-10">
       <!-- prize card -->
       <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-amber-200 card-hover">
@@ -38,20 +47,22 @@
           <div class="bg-yellow-400 rounded-full p-4 text-3xl">🏆</div>
           <div>
             <h2 class="text-2xl font-bold text-gray-800">মেগা পুরস্কার</h2>
-            <p class="text-3xl font-extrabold text-amber-700">২০,০০০ টাকা</p>
+            <p class="text-3xl font-extrabold text-amber-700">৫,০০,০০০ টাকা</p>
             <p class="text-sm text-gray-500">প্রথম পুরস্কার (এবং আরও ১০টি আকর্ষণীয় পুরস্কার)</p>
           </div>
         </div>
       </div>
-      <!-- bKash payment info card (you can easily change number here) -->
+      <!-- Payment info card (bkash + nagad) - number updated via JS -->
       <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-amber-200 card-hover">
         <div class="flex items-center gap-4">
           <div class="bg-pink-500 rounded-full p-4 text-3xl text-white">💳</div>
           <div>
-            <h2 class="text-2xl font-bold text-gray-800">বিকাশ পেমেন্ট</h2>
-            <p class="text-xl font-mono font-semibold text-gray-800"> <span class="bg-gray-100 px-3 py-1 rounded-lg">01709-341470</span></p>
+            <h2 class="text-2xl font-bold text-gray-800">পেমেন্ট করুন</h2>
+            <p class="text-xl font-mono font-semibold text-gray-800">
+              <span class="bg-gray-100 px-3 py-1 rounded-lg" id="bkashDisplay">01709341470</span>
+            </p>
+            <p class="text-sm text-gray-600">বিকাশ / নগদ (উভয়ই এই নম্বর)</p>
             <p class="text-sm text-gray-600">মোট টাকা = টিকিট সংখ্যা × ৫ টাকা</p>
-            <!-- this number is dummy – you can replace it below as well as in the instructions -->
           </div>
         </div>
       </div>
@@ -87,158 +98,92 @@
           <p class="text-sm text-gray-500 mt-1">মোট মূল্য: <span id="totalPriceDisplay" class="font-bold text-amber-700">৫</span> টাকা</p>
         </div>
 
-        <!-- bKash transaction ID -->
+        <!-- Transaction ID (bkash/nagad) -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1"><i class="fab fa-buffer mr-2 text-amber-600"></i>বিকাশ ট্রানজেকশন আইডি (TxnID)</label>
+          <label class="block text-gray-700 font-medium mb-1"><i class="fab fa-buffer mr-2 text-amber-600"></i>ট্রানজেকশন আইডি (TxnID)</label>
           <input type="text" id="txnId" name="txnId" required 
                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition"
                  placeholder="যেমন: D8G7S9T6">
-          <p class="text-xs text-gray-400 mt-1">বিকাশ মেনু থেকে "TrxID" কপি করে দিন</p>
+          <p class="text-xs text-gray-400 mt-1">বিকাশ/নগদ মেনু থেকে TrxID কপি করে দিন</p>
         </div>
-
-        <!-- important: hidden field for the bKash number that appears on email (so you can set it easily) -->
-        <input type="hidden" id="bkashNumberHidden" value="01700-000000">
 
         <!-- submit button -->
         <button type="submit" id="submitBtn" 
-                class="w-full bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-md transition duration-200 flex items-center justify-center gap-2">
-          <i class="fas fa-paper-plane"></i> সুযোগটি কিনুন (সাবমিট)
+                class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 rounded-xl text-lg shadow-md transition duration-200 flex items-center justify-center gap-2">
+          <i class="fab fa-whatsapp text-xl"></i> সাবমিট ও হোয়াটসঅ্যাপ নোটিফিকেশন
         </button>
       </form>
 
       <!-- output area: pending message + tracking id -->
       <div id="resultBox" class="mt-6 p-5 rounded-xl bg-gray-50 border border-gray-200 hidden">
-        <p id="pendingMessage" class="text-lg font-medium text-gray-700 flex items-center gap-2"><i class="fas fa-hourglass-half text-amber-500"></i> <span></span></p>
+        <p id="pendingMessage" class="text-lg font-medium text-gray-700 flex items-center gap-2">
+          <i class="fas fa-hourglass-half text-amber-500"></i> 
+          <span>আপনার বুকিং জমা হয়েছে (pending)</span>
+        </p>
         <div id="trackingContainer" class="mt-2 flex items-center gap-2">
           <span class="font-semibold text-gray-600">ট্র্যাকিং আইডি:</span>
           <span id="trackingIdDisplay" class="tracking-id bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-bold"></span>
         </div>
-        <p class="text-sm text-gray-500 mt-3"><i class="fas fa-info-circle"></i> আপনার তথ্য জমা হয়েছে। প্রশাসক পেমেন্ট যাচাই করে সক্রিয় করবেন।</p>
+        <p class="text-sm text-gray-500 mt-3"><i class="fas fa-info-circle"></i> আপনার তথ্য জমা হয়েছে। অটোমেটিক হোয়াটসঅ্যাপে পাঠানো হবে।</p>
       </div>
     </div>
 
-    <!-- footer / note -->
+    <!-- footer / note with 4S credit -->
     <div class="text-center text-sm text-gray-600">
-      <p>⚠️ এটি একটি ডেমো সাইট — নির্ধারিত বিকাশ নম্বরে টাকা পাঠানোর পর ফর্ম পূরণ করুন।</p>
-      <p class="mt-1">📧 ইমেইল নোটিফিকেশন সক্রিয় (EmailJS এর মাধ্যমে) &nbsp; | &nbsp; ডাটা Google Sheets backup (ফর্ম সাবমিট)</p>
+      <p>⚠️ ৪এস অনলাইন মার্কেটপ্লেস এর পক্ষ থেকে এই লটারি আয়োজন — নির্ধারিত নম্বরে টাকা পাঠানোর পর ফর্ম পূরণ করুন।</p>
+      <p class="mt-1">📱 হোয়াটসঅ্যাপ নোটিফিকেশন সক্রিয় • বিকাশ/নগদ: 01709341470</p>
     </div>
   </div>
 
-  <!-- ========== JAVASCRIPT (all logic, EmailJS + google forms + dynamic bKash number) ========== -->
+  <!-- ========== একমাত্র স্ক্রিপ্ট ========== -->
   <script>
     (function() {
-      // ------------------------------------------------------------------
-      // আপনি এখানে আপনার নিজের বিকাশ নম্বর এবং ইমেইল ঠিকানা বসাতে পারবেন
-      // ------------------------------------------------------------------
-      const USER_BKASH_NUMBER = "01700-000000";          // <-- আপনার বিকাশ নম্বর দিন
-      const USER_EMAIL = "your-email@example.com";       // <-- আপনার ইমেইল (যেখানে নোটিফিকেশন যাবে)
-      // EmailJS configuration (ফ্রী, client-side)
-      const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";      // <-- EmailJS এ সাইন আপ করে public key বসান
-      const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";      // <-- service id
-      const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";    // <-- template id
-      
-      // Google Forms integration (ফ্রী backup হিসেবে) — you can replace with your google form "entry" ids
-      const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse"; // আপনার ফর্ম URL বসান
-      const GOOGLE_NAME_ENTRY = "entry.123456789";       // name field entry ID (example)
-      const GOOGLE_MOBILE_ENTRY = "entry.987654321";     // mobile
-      const GOOGLE_QTY_ENTRY = "entry.456789123";        // quantity
-      const GOOGLE_TXN_ENTRY = "entry.741852963";        // txn id
-      const GOOGLE_TRACKING_ENTRY = "entry.369258147";   // tracking id (optional)
-      
-      // ------------------------------------------------------------------
-      // UI elements
+      // ১. এখানে আপনার নাম্বারগুলো দিন (শুধু এই অংশটুকু পরিবর্তন করুন)
+      const USER_BKASH_NAGAD_NUMBER = "01709341470";   // <-- আপনার বিকাশ/নগদ নম্বর
+      const MY_WHATSAPP_NUMBER = "8801709341470";      // <-- আপনার হোয়াটসঅ্যাপ নম্বর (880 দিয়ে শুরু, 017... এর জন্য 88017...)
+
+      // ডোম এলিমেন্ট সংগ্রহ
       const form = document.getElementById('lotteryForm');
       const nameInput = document.getElementById('name');
       const mobileInput = document.getElementById('mobile');
       const quantityInput = document.getElementById('quantity');
       const txnIdInput = document.getElementById('txnId');
-      const bkashHidden = document.getElementById('bkashNumberHidden');
       const totalSpan = document.getElementById('totalPriceDisplay');
-      const submitBtn = document.getElementById('submitBtn');
       const resultBox = document.getElementById('resultBox');
-      const pendingMsgSpan = document.querySelector('#pendingMessage span');
       const trackingSpan = document.getElementById('trackingIdDisplay');
-      
-      // set the hidden bKash number from the constant (so it appears if you use it in email)
-      bkashHidden.value = USER_BKASH_NUMBER;
+      const pendingMsgSpan = document.querySelector('#pendingMessage span');
+      const submitBtn = document.getElementById('submitBtn');
+      const bKashDisplaySpan = document.getElementById('bkashDisplay');
 
-      // update total price on quantity change
-      function updateTotal() {
-        let qty = parseInt(quantityInput.value) || 1;
+      // পেমেন্ট নম্বর UI-তে সেট করা
+      if(bKashDisplaySpan) bKashDisplaySpan.innerText = USER_BKASH_NAGAD_NUMBER;
+
+      // টিকিটের দাম আপডেট করার ফাংশন
+      quantityInput.addEventListener('input', function() {
+        let qty = parseInt(this.value) || 1;
         if (qty < 1) qty = 1;
-        const total = qty * 5;
-        totalSpan.textContent = total;
-      }
-      quantityInput.addEventListener('input', updateTotal);
-      updateTotal(); // initial
+        totalSpan.textContent = qty * 5;
+      });
 
-      // Helper: generate a random tracking ID (8 digit alphanumeric)
-      function generateTrackingId() {
-        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
-        let id = '';
-        for (let i = 0; i < 8; i++) {
-          id += chars[Math.floor(Math.random() * chars.length)];
-        }
-        return 'TR-' + id;
+      // ট্র্যাকিং আইডি জেনারেট করা (TR-xxxxxx)
+      function generateId() {
+        return 'TR-' + Math.random().toString(36).substr(2, 8).toUpperCase();
       }
 
-      // Helper: send data to Google Forms via fetch (CORS usually works if using no-cors, but we just want backup)
-      function sendToGoogleSheets(formData, trackingId) {
-        if (GOOGLE_FORM_ACTION_URL.includes('YOUR_FORM_ID')) {
-          console.log('Google Form not configured, skip.');
-          return;
-        }
-        // Build payload with entry IDs – you must replace the entry ids accordingly
-        const payload = new URLSearchParams({
-          [GOOGLE_NAME_ENTRY]: formData.name,
-          [GOOGLE_MOBILE_ENTRY]: formData.mobile,
-          [GOOGLE_QTY_ENTRY]: formData.quantity,
-          [GOOGLE_TXN_ENTRY]: formData.txnId,
-          [GOOGLE_TRACKING_ENTRY]: trackingId,
-        });
-        // Use fetch with no-cors to avoid preflight (won't see response but data usually goes)
-        fetch(GOOGLE_FORM_ACTION_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: payload
-        }).catch(e => console.warn('Google sheets log (non-blocking):', e));
-      }
-
-      // EmailJS send function (returns promise)
-      function sendEmail(formData, trackingId) {
-        // if public key not set, resolve fake success (for demo)
-        if (EMAILJS_PUBLIC_KEY.includes('YOUR_PUBLIC_KEY')) {
-          console.warn('EmailJS keys not set — simulating email notification');
-          return Promise.resolve({ status: 'demo', message: 'email simulation' });
-        }
-        // init emailjs
-        emailjs.init(EMAILJS_PUBLIC_KEY);
-        const templateParams = {
-          to_email: USER_EMAIL,
-          from_name: formData.name,
-          mobile: formData.mobile,
-          quantity: formData.quantity,
-          txn_id: formData.txnId,
-          bkash_number: USER_BKASH_NUMBER,
-          tracking_id: trackingId,
-          total_price: formData.quantity * 5 + ' টাকা',
-          reply_to: 'no-reply@lottery.local' // optional
-        };
-        return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-      }
-
-      // handle form submit
+      // ফর্ম সাবমিট হ্যান্ডলার
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // Collect form data
+        // ফর্মের মান সংগ্রহ
         const name = nameInput.value.trim();
         const mobile = mobileInput.value.trim();
-        const quantity = parseInt(quantityInput.value) || 1;
+        const qty = parseInt(quantityInput.value) || 1;
         const txnId = txnIdInput.value.trim();
+        
+        // মোট টাকা
+        const totalAmount = qty * 5;
 
-        // basic validation
+        // মৌলিক যাচাই
         if (!name || !mobile || !txnId) {
           alert('দয়া করে সকল ঘর পূরণ করুন');
           return;
@@ -248,70 +193,58 @@
           return;
         }
 
-        // Generate tracking ID
-        const trackingId = generateTrackingId();
+        // ট্র্যাকিং আইডি জেনারেট
+        const trackingId = generateId();
 
-        // Prepare data object
-        const formData = { name, mobile, quantity, txnId };
-
-        // --- Optimistic UI: show pending & tracking id immediately ---
-        pendingMsgSpan.innerText = 'আপনার বুকিং জমা হয়েছে (pending)';
+        // ইউজারকে ট্র্যাকিং আইডি দেখানো
         trackingSpan.innerText = trackingId;
+        pendingMsgSpan.innerText = 'আপনার বুকিং জমা হয়েছে (pending)';
         resultBox.classList.remove('hidden');
-        
-        // Disable button to avoid double click
+
+        // বাটন নিষ্ক্রিয় (যাতে বারবার ক্লিক না করে)
         submitBtn.disabled = true;
-        submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> প্রক্রিয়াকরণ...`;
+        submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> হোয়াটসঅ্যাপ খোলা হচ্ছে...`;
 
-        // --- 1. Send to Google Sheets (silent backup) ---
-        sendToGoogleSheets(formData, trackingId);
+        // হোয়াটসঅ্যাপ মেসেজ তৈরি (4S Online marketplace উল্লেখসহ)
+        const message = `🎰 *4S Online Marketplace - লটারি বুকিং*%0a%0a` +
+                        `👤 *নাম:* ${name}%0a` +
+                        `📱 *মোবাইল:* ${mobile}%0a` +
+                        `🎟 *টিকিট সংখ্যা:* ${qty}%0a` +
+                        `💳 *TxnID:* ${txnId}%0a` +
+                        `🆔 *ট্র্যাকিং ID:* ${trackingId}%0a` +
+                        `💰 *মোট টাকা:* ${totalAmount} টাকা%0a%0a` +
+                        `_পেমেন্ট নম্বর (বিকাশ/নগদ):_ ${USER_BKASH_NAGAD_NUMBER}%0a` +
+                        `_4S Online marketplace এর পক্ষ থেকে এই লটারি_`;
 
-        // --- 2. Send email via EmailJS ---
-        sendEmail(formData, trackingId)
-          .then(response => {
-            console.log('Email sent successfully!', response);
-            // optionally update pending message (but keep pending)
-            pendingMsgSpan.innerText = 'আবেদন জমা হয়েছে। অপেক্ষারত (pending)';
-          })
-          .catch(error => {
-            console.error('Email sending failed:', error);
-            // Still show pending, but user should know email failed? we keep success look but notify silently.
-            pendingMsgSpan.innerText = 'আবেদন জমা হয়েছে (ইমেইল নোটিফিকেশন ব্যর্থ)';
-          })
-          .finally(() => {
-            // Re-enable button? maybe but we reset form to avoid confusion
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `<i class="fas fa-paper-plane"></i> সুযোগটি কিনুন (সাবমিট)`;
-            // Optionally reset the form? Not resetting so user can see what they entered.
-            // but we could leave it.
-          });
+        // হোয়াটসঅ্যাপ লিঙ্ক তৈরি (আপনার নম্বরে মেসেজ যাবে)
+        const whatsappUrl = `https://wa.me/${MY_WHATSAPP_NUMBER}?text=${message}`;
 
-        // We can also store in localStorage just for fun (not required)
-        // but no need.
+        // ১.৮ সেকেন্ড পর হোয়াটসঅ্যাপে নিয়ে যাওয়া
+        setTimeout(() => {
+          window.open(whatsappUrl, '_blank');
+          
+          // বাটন পুনরায় সক্রিয়
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<i class="fab fa-whatsapp"></i> সাবমিট ও হোয়াটসঅ্যাপ নোটিফিকেশন`;
+          
+          // ঐচ্ছিক: ফর্ম রিসেট (নিচের লাইন খুলে দিতে পারেন)
+          // form.reset(); totalSpan.textContent = '৫'; 
+        }, 1800);
+        
       });
-
-      // Make sure user can change bKash number from constant at the top (already reflected in hidden and card)
-      // Update the card's displayed bKash number dynamically:
-      const bKashCardSpan = document.querySelector('.bg-pink-500 + div p.font-mono span');
-      if (bKashCardSpan) {
-        bKashCardSpan.innerText = USER_BKASH_NUMBER;
-      }
-
-      // Also update the hidden field again (already set)
     })();
   </script>
 
-  <!-- instructions for easy customisation (visible note) -->
+  <!-- কাস্টমাইজেশন হেল্পার -->
   <div class="fixed bottom-2 left-2 bg-white/70 backdrop-blur-sm text-xs p-2 rounded-xl border border-amber-300 max-w-sm">
     <details>
-      <summary class="font-bold text-amber-800 cursor-pointer">⚙️ আপনার সেটিংস (ক্লিক করুন)</summary>
+      <summary class="font-bold text-amber-800 cursor-pointer">⚙️ 4S Online marketplace সেটিংস</summary>
       <div class="mt-2 text-gray-700">
-        <p><span class="font-mono">🔹 বিকাশ নম্বর: <script>document.write(window.USER_BKASH_NUMBER || '01700-000000')</script></span> — <span class="bg-amber-200 px-1">JS-এর শুরুতে USER_BKASH_NUMBER পরিবর্তন করুন</span></p>
-        <p><span class="font-mono">🔹 ইমেইল: <script>document.write(window.USER_EMAIL || 'your-email@example.com')</script></span> — <span class="bg-amber-200 px-1">USER_EMAIL ভেরিয়েবল পরিবর্তন করুন</span></p>
-        <p>🔹 EmailJS: public key, service, template বসাতে হবে। তাছাড়া ডেমো মোডে সিমুলেশন হবে।</p>
-        <p>🔹 Google Forms: action URL ও entry আইডি প্রতিস্থাপন করলে Google Sheets এ backup রাখতে পারবেন।</p>
+        <p><span class="font-mono">🔹 বিকাশ/নগদ: 01709341470</span> — (আপনার দেওয়া নাম্বার)</p>
+        <p><span class="font-mono">🔹 হোয়াটসঅ্যাপ: 8801709341470</span> — (স্বয়ংক্রিয় সেট)</p>
+        <p>📌 লোগো "ONLINE MARKETPLACE" ও স্লোগান যুক্ত হয়েছে। ফর্ম সাবমিট করলে WhatsApp এ বিস্তারিত যাবে।</p>
       </div>
     </details>
   </div>
 </body>
-            </html>
+  </html>
