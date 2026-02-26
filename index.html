@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>আপনার লটারি · টিকিট বুকিং</title>
+  <!-- Tailwind via CDN + basic inter activity -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome for icons (optional but nice) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- EmailJS library (free client-side) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    /* smooth loading / hover effects */
+    .card-hover { transition: all 0.2s ease; }
+    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.02); }
+    .tracking-id { font-family: 'Courier New', monospace; letter-spacing: 1px; }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-amber-50 to-orange-100 min-h-screen flex items-start justify-center p-4 md:p-6">
+
+  <!-- main container (max width) -->
+  <div class="w-full max-w-4xl">
+
+    <!-- header / title -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-red-700 drop-shadow-md">
+        🎰 স্বপ্ন লটারি
+      </h1>
+      <p class="text-gray-700 text-lg mt-2">৫ টাকায় সুযোগ — আপনার ভাগ্য আজ খুলতে পারে!</p>
+    </div>
+
+    <!-- prize & bKash info cards (landing style) -->
+    <div class="grid md:grid-cols-2 gap-5 mb-10">
+      <!-- prize card -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-amber-200 card-hover">
+        <div class="flex items-center gap-4">
+          <div class="bg-yellow-400 rounded-full p-4 text-3xl">🏆</div>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">মেগা পুরস্কার</h2>
+            <p class="text-3xl font-extrabold text-amber-700">২০,০০০ টাকা</p>
+            <p class="text-sm text-gray-500">প্রথম পুরস্কার (এবং আরও ১০টি আকর্ষণীয় পুরস্কার)</p>
+          </div>
+        </div>
+      </div>
+      <!-- bKash payment info card (you can easily change number here) -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-amber-200 card-hover">
+        <div class="flex items-center gap-4">
+          <div class="bg-pink-500 rounded-full p-4 text-3xl text-white">💳</div>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">বিকাশ পেমেন্ট</h2>
+            <p class="text-xl font-mono font-semibold text-gray-800"> <span class="bg-gray-100 px-3 py-1 rounded-lg">01709-341470</span></p>
+            <p class="text-sm text-gray-600">মোট টাকা = টিকিট সংখ্যা × ৫ টাকা</p>
+            <!-- this number is dummy – you can replace it below as well as in the instructions -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- main booking form card -->
+    <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border border-amber-300 mb-10 card-hover">
+      <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2"><i class="fas fa-ticket-alt text-amber-600"></i> আপনার টিকিট বুক করুন</h3>
+      
+      <!-- form starts -->
+      <form id="lotteryForm" class="space-y-5">
+        <!-- name field -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1"><i class="fas fa-user mr-2 text-amber-600"></i>আপনার নাম</label>
+          <input type="text" id="name" name="name" required 
+                 class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition"
+                 placeholder="যেমন: রহিম মিয়া">
+        </div>
+
+        <!-- mobile number -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1"><i class="fas fa-phone-alt mr-2 text-amber-600"></i>মোবাইল নম্বর</label>
+          <input type="tel" id="mobile" name="mobile" required 
+                 class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition"
+                 placeholder="০১৭xxxxxxxx">
+        </div>
+
+        <!-- ticket quantity -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1"><i class="fas fa-sort-numeric-up-alt mr-2 text-amber-600"></i>টিকিট সংখ্যা (প্রতি টিকিট ৫ টাকা)</label>
+          <input type="number" id="quantity" name="quantity" min="1" max="100" value="1" required 
+                 class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition">
+          <p class="text-sm text-gray-500 mt-1">মোট মূল্য: <span id="totalPriceDisplay" class="font-bold text-amber-700">৫</span> টাকা</p>
+        </div>
+
+        <!-- bKash transaction ID -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1"><i class="fab fa-buffer mr-2 text-amber-600"></i>বিকাশ ট্রানজেকশন আইডি (TxnID)</label>
+          <input type="text" id="txnId" name="txnId" required 
+                 class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition"
+                 placeholder="যেমন: D8G7S9T6">
+          <p class="text-xs text-gray-400 mt-1">বিকাশ মেনু থেকে "TrxID" কপি করে দিন</p>
+        </div>
+
+        <!-- important: hidden field for the bKash number that appears on email (so you can set it easily) -->
+        <input type="hidden" id="bkashNumberHidden" value="01700-000000">
+
+        <!-- submit button -->
+        <button type="submit" id="submitBtn" 
+                class="w-full bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-md transition duration-200 flex items-center justify-center gap-2">
+          <i class="fas fa-paper-plane"></i> সুযোগটি কিনুন (সাবমিট)
+        </button>
+      </form>
+
+      <!-- output area: pending message + tracking id -->
+      <div id="resultBox" class="mt-6 p-5 rounded-xl bg-gray-50 border border-gray-200 hidden">
+        <p id="pendingMessage" class="text-lg font-medium text-gray-700 flex items-center gap-2"><i class="fas fa-hourglass-half text-amber-500"></i> <span></span></p>
+        <div id="trackingContainer" class="mt-2 flex items-center gap-2">
+          <span class="font-semibold text-gray-600">ট্র্যাকিং আইডি:</span>
+          <span id="trackingIdDisplay" class="tracking-id bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-bold"></span>
+        </div>
+        <p class="text-sm text-gray-500 mt-3"><i class="fas fa-info-circle"></i> আপনার তথ্য জমা হয়েছে। প্রশাসক পেমেন্ট যাচাই করে সক্রিয় করবেন।</p>
+      </div>
+    </div>
+
+    <!-- footer / note -->
+    <div class="text-center text-sm text-gray-600">
+      <p>⚠️ এটি একটি ডেমো সাইট — নির্ধারিত বিকাশ নম্বরে টাকা পাঠানোর পর ফর্ম পূরণ করুন।</p>
+      <p class="mt-1">📧 ইমেইল নোটিফিকেশন সক্রিয় (EmailJS এর মাধ্যমে) &nbsp; | &nbsp; ডাটা Google Sheets backup (ফর্ম সাবমিট)</p>
+    </div>
+  </div>
+
+  <!-- ========== JAVASCRIPT (all logic, EmailJS + google forms + dynamic bKash number) ========== -->
+  <script>
+    (function() {
+      // ------------------------------------------------------------------
+      // আপনি এখানে আপনার নিজের বিকাশ নম্বর এবং ইমেইল ঠিকানা বসাতে পারবেন
+      // ------------------------------------------------------------------
+      const USER_BKASH_NUMBER = "01700-000000";          // <-- আপনার বিকাশ নম্বর দিন
+      const USER_EMAIL = "your-email@example.com";       // <-- আপনার ইমেইল (যেখানে নোটিফিকেশন যাবে)
+      // EmailJS configuration (ফ্রী, client-side)
+      const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";      // <-- EmailJS এ সাইন আপ করে public key বসান
+      const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";      // <-- service id
+      const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";    // <-- template id
+      
+      // Google Forms integration (ফ্রী backup হিসেবে) — you can replace with your google form "entry" ids
+      const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse"; // আপনার ফর্ম URL বসান
+      const GOOGLE_NAME_ENTRY = "entry.123456789";       // name field entry ID (example)
+      const GOOGLE_MOBILE_ENTRY = "entry.987654321";     // mobile
+      const GOOGLE_QTY_ENTRY = "entry.456789123";        // quantity
+      const GOOGLE_TXN_ENTRY = "entry.741852963";        // txn id
+      const GOOGLE_TRACKING_ENTRY = "entry.369258147";   // tracking id (optional)
+      
+      // ------------------------------------------------------------------
+      // UI elements
+      const form = document.getElementById('lotteryForm');
+      const nameInput = document.getElementById('name');
+      const mobileInput = document.getElementById('mobile');
+      const quantityInput = document.getElementById('quantity');
+      const txnIdInput = document.getElementById('txnId');
+      const bkashHidden = document.getElementById('bkashNumberHidden');
+      const totalSpan = document.getElementById('totalPriceDisplay');
+      const submitBtn = document.getElementById('submitBtn');
+      const resultBox = document.getElementById('resultBox');
+      const pendingMsgSpan = document.querySelector('#pendingMessage span');
+      const trackingSpan = document.getElementById('trackingIdDisplay');
+      
+      // set the hidden bKash number from the constant (so it appears if you use it in email)
+      bkashHidden.value = USER_BKASH_NUMBER;
+
+      // update total price on quantity change
+      function updateTotal() {
+        let qty = parseInt(quantityInput.value) || 1;
+        if (qty < 1) qty = 1;
+        const total = qty * 5;
+        totalSpan.textContent = total;
+      }
+      quantityInput.addEventListener('input', updateTotal);
+      updateTotal(); // initial
+
+      // Helper: generate a random tracking ID (8 digit alphanumeric)
+      function generateTrackingId() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
+        let id = '';
+        for (let i = 0; i < 8; i++) {
+          id += chars[Math.floor(Math.random() * chars.length)];
+        }
+        return 'TR-' + id;
+      }
+
+      // Helper: send data to Google Forms via fetch (CORS usually works if using no-cors, but we just want backup)
+      function sendToGoogleSheets(formData, trackingId) {
+        if (GOOGLE_FORM_ACTION_URL.includes('YOUR_FORM_ID')) {
+          console.log('Google Form not configured, skip.');
+          return;
+        }
+        // Build payload with entry IDs – you must replace the entry ids accordingly
+        const payload = new URLSearchParams({
+          [GOOGLE_NAME_ENTRY]: formData.name,
+          [GOOGLE_MOBILE_ENTRY]: formData.mobile,
+          [GOOGLE_QTY_ENTRY]: formData.quantity,
+          [GOOGLE_TXN_ENTRY]: formData.txnId,
+          [GOOGLE_TRACKING_ENTRY]: trackingId,
+        });
+        // Use fetch with no-cors to avoid preflight (won't see response but data usually goes)
+        fetch(GOOGLE_FORM_ACTION_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: payload
+        }).catch(e => console.warn('Google sheets log (non-blocking):', e));
+      }
+
+      // EmailJS send function (returns promise)
+      function sendEmail(formData, trackingId) {
+        // if public key not set, resolve fake success (for demo)
+        if (EMAILJS_PUBLIC_KEY.includes('YOUR_PUBLIC_KEY')) {
+          console.warn('EmailJS keys not set — simulating email notification');
+          return Promise.resolve({ status: 'demo', message: 'email simulation' });
+        }
+        // init emailjs
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+        const templateParams = {
+          to_email: USER_EMAIL,
+          from_name: formData.name,
+          mobile: formData.mobile,
+          quantity: formData.quantity,
+          txn_id: formData.txnId,
+          bkash_number: USER_BKASH_NUMBER,
+          tracking_id: trackingId,
+          total_price: formData.quantity * 5 + ' টাকা',
+          reply_to: 'no-reply@lottery.local' // optional
+        };
+        return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+      }
+
+      // handle form submit
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Collect form data
+        const name = nameInput.value.trim();
+        const mobile = mobileInput.value.trim();
+        const quantity = parseInt(quantityInput.value) || 1;
+        const txnId = txnIdInput.value.trim();
+
+        // basic validation
+        if (!name || !mobile || !txnId) {
+          alert('দয়া করে সকল ঘর পূরণ করুন');
+          return;
+        }
+        if (mobile.length < 11) {
+          alert('সঠিক মোবাইল নম্বর দিন (১১ সংখ্যা)');
+          return;
+        }
+
+        // Generate tracking ID
+        const trackingId = generateTrackingId();
+
+        // Prepare data object
+        const formData = { name, mobile, quantity, txnId };
+
+        // --- Optimistic UI: show pending & tracking id immediately ---
+        pendingMsgSpan.innerText = 'আপনার বুকিং জমা হয়েছে (pending)';
+        trackingSpan.innerText = trackingId;
+        resultBox.classList.remove('hidden');
+        
+        // Disable button to avoid double click
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> প্রক্রিয়াকরণ...`;
+
+        // --- 1. Send to Google Sheets (silent backup) ---
+        sendToGoogleSheets(formData, trackingId);
+
+        // --- 2. Send email via EmailJS ---
+        sendEmail(formData, trackingId)
+          .then(response => {
+            console.log('Email sent successfully!', response);
+            // optionally update pending message (but keep pending)
+            pendingMsgSpan.innerText = 'আবেদন জমা হয়েছে। অপেক্ষারত (pending)';
+          })
+          .catch(error => {
+            console.error('Email sending failed:', error);
+            // Still show pending, but user should know email failed? we keep success look but notify silently.
+            pendingMsgSpan.innerText = 'আবেদন জমা হয়েছে (ইমেইল নোটিফিকেশন ব্যর্থ)';
+          })
+          .finally(() => {
+            // Re-enable button? maybe but we reset form to avoid confusion
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="fas fa-paper-plane"></i> সুযোগটি কিনুন (সাবমিট)`;
+            // Optionally reset the form? Not resetting so user can see what they entered.
+            // but we could leave it.
+          });
+
+        // We can also store in localStorage just for fun (not required)
+        // but no need.
+      });
+
+      // Make sure user can change bKash number from constant at the top (already reflected in hidden and card)
+      // Update the card's displayed bKash number dynamically:
+      const bKashCardSpan = document.querySelector('.bg-pink-500 + div p.font-mono span');
+      if (bKashCardSpan) {
+        bKashCardSpan.innerText = USER_BKASH_NUMBER;
+      }
+
+      // Also update the hidden field again (already set)
+    })();
+  </script>
+
+  <!-- instructions for easy customisation (visible note) -->
+  <div class="fixed bottom-2 left-2 bg-white/70 backdrop-blur-sm text-xs p-2 rounded-xl border border-amber-300 max-w-sm">
+    <details>
+      <summary class="font-bold text-amber-800 cursor-pointer">⚙️ আপনার সেটিংস (ক্লিক করুন)</summary>
+      <div class="mt-2 text-gray-700">
+        <p><span class="font-mono">🔹 বিকাশ নম্বর: <script>document.write(window.USER_BKASH_NUMBER || '01700-000000')</script></span> — <span class="bg-amber-200 px-1">JS-এর শুরুতে USER_BKASH_NUMBER পরিবর্তন করুন</span></p>
+        <p><span class="font-mono">🔹 ইমেইল: <script>document.write(window.USER_EMAIL || 'your-email@example.com')</script></span> — <span class="bg-amber-200 px-1">USER_EMAIL ভেরিয়েবল পরিবর্তন করুন</span></p>
+        <p>🔹 EmailJS: public key, service, template বসাতে হবে। তাছাড়া ডেমো মোডে সিমুলেশন হবে।</p>
+        <p>🔹 Google Forms: action URL ও entry আইডি প্রতিস্থাপন করলে Google Sheets এ backup রাখতে পারবেন।</p>
+      </div>
+    </details>
+  </div>
+</body>
+            </html>
