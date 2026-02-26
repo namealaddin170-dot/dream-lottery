@@ -12,6 +12,9 @@
     .card-hover { transition: all 0.2s ease; }
     .card-hover:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.02); }
     .tracking-id { font-family: 'Courier New', monospace; letter-spacing: 1px; }
+    .logo-glow {
+      text-shadow: 0 2px 10px rgba(255,215,0,0.3);
+    }
   </style>
 </head>
 <body class="bg-gradient-to-b from-amber-50 to-orange-100 min-h-screen flex items-start justify-center p-4 md:p-6">
@@ -21,55 +24,71 @@
 
     <!-- header with logo and slogan -->
     <div class="text-center mb-8">
-      <!-- logo display -->
-      <div class="flex justify-center mb-3">
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-6 rounded-full inline-flex items-center gap-3 shadow-lg">
-          <i class="fas fa-crown text-yellow-300 text-2xl"></i>
-          <span class="text-2xl tracking-wider">ONLINE MARKETPLACE</span>
-          <i class="fas fa-store text-yellow-300 text-2xl"></i>
+      <!-- logo display - more prominent now -->
+      <div class="flex justify-center mb-4">
+        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-black py-4 px-8 rounded-full inline-flex items-center gap-4 shadow-2xl border-2 border-yellow-300 logo-glow">
+          <i class="fas fa-crown text-yellow-300 text-3xl"></i>
+          <span class="text-3xl md:text-4xl tracking-wider">ONLINE MARKETPLACE</span>
+          <i class="fas fa-store text-yellow-300 text-3xl"></i>
         </div>
       </div>
-      <!-- slogan -->
-      <p class="text-xl text-gray-700 font-semibold mt-2 bg-white/60 inline-block px-6 py-2 rounded-full backdrop-blur-sm">
+      <!-- slogan with 4S -->
+      <p class="text-xl md:text-2xl text-gray-800 font-bold mt-2 bg-white/70 inline-block px-8 py-3 rounded-full backdrop-blur-sm shadow-md border border-amber-300">
         4S Online marketplace এর পক্ষ থেকে এই লটারিটা
       </p>
-      <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-red-700 drop-shadow-md mt-4">
+      <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-red-700 drop-shadow-md mt-6">
         🎰 স্বপ্ন লটারি
       </h1>
       <p class="text-gray-700 text-lg mt-2">৫ টাকায় সুযোগ — আপনার ভাগ্য আজ খুলতে পারে!</p>
     </div>
 
     <!-- prize & payment info cards -->
-    <div class="grid md:grid-cols-2 gap-5 mb-10">
+    <div class="grid md:grid-cols-2 gap-5 mb-8">
       <!-- prize card -->
       <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-amber-200 card-hover">
         <div class="flex items-center gap-4">
           <div class="bg-yellow-400 rounded-full p-4 text-3xl">🏆</div>
           <div>
             <h2 class="text-2xl font-bold text-gray-800">মেগা পুরস্কার</h2>
-            <p class="text-3xl font-extrabold text-amber-700">20,000 টাকা</p>
-            <p class="text-sm text-gray-500">প্রথম পুরস্কার দ্বিতীয় পুরস্কার ও তৃতীয় পুরস্কার (এবং আরও ১০টি আকর্ষণীয় পুরস্কার)</p>
+            <p class="text-3xl font-extrabold text-amber-700">৫,০০,০০০ টাকা</p>
+            <p class="text-sm text-gray-500">প্রথম পুরস্কার (এবং আরও ১০টি আকর্ষণীয় পুরস্কার)</p>
           </div>
         </div>
       </div>
-      <!-- Payment info card (bkash + nagad) - number updated via JS -->
+      <!-- Payment info card (bkash + nagad) -->
       <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-amber-200 card-hover">
         <div class="flex items-center gap-4">
-          <div class="bg-pink-500 rounded-full p-4 text-3xl text-white">💳</div>
+          <div class="bg-gradient-to-br from-pink-500 to-red-500 rounded-full p-4 text-3xl text-white">💳</div>
           <div>
             <h2 class="text-2xl font-bold text-gray-800">পেমেন্ট করুন</h2>
-            <p class="text-xl font-mono font-semibold text-gray-800">
-              <span class="bg-gray-100 px-3 py-1 rounded-lg" id="bkashDisplay">01709341470</span>
+            <p class="text-2xl font-mono font-semibold text-gray-800">
+              <span class="bg-gray-100 px-4 py-2 rounded-lg border-2 border-pink-300" id="bkashDisplay">01709341470</span>
             </p>
-            <p class="text-sm text-gray-600">বিকাশ / নগদ (উভয়ই এই নম্বর)</p>
+            <p class="text-sm text-gray-600 mt-1">বিকাশ / নগদ (উভয়ই এই নম্বর)</p>
             <p class="text-sm text-gray-600">মোট টাকা = টিকিট সংখ্যা × ৫ টাকা</p>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Facebook update notice with link -->
+    <div class="bg-blue-50 border-2 border-blue-400 rounded-2xl p-5 mb-8 text-center shadow-lg">
+      <div class="flex items-center justify-center gap-3 flex-wrap">
+        <i class="fab fa-facebook text-blue-600 text-4xl"></i>
+        <p class="text-xl md:text-2xl font-bold text-gray-800">
+          লটারির সকল আপডেট পেতে চোখ রাখুন 
+          <a href="https://www.facebook.com/share/1GzYqgH9yP/" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-full mx-2 hover:bg-blue-700 transition inline-flex items-center gap-2">
+            <i class="fab fa-facebook"></i> 4S Online Marketplace
+          </a> 
+          এর পেজে
+        </p>
+        <i class="fab fa-facebook text-blue-600 text-4xl"></i>
+      </div>
+      <p class="text-md text-gray-600 mt-3">🔔 ফলাফল, বিজয়ী তালিকা ও পরবর্তী ড্র এর খবর পাবেন আমাদের ফেসবুক পেজেই</p>
+    </div>
+
     <!-- main booking form card -->
-    <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border border-amber-300 mb-10 card-hover">
+    <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border border-amber-300 mb-8 card-hover">
       <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2"><i class="fas fa-ticket-alt text-amber-600"></i> আপনার টিকিট বুক করুন</h3>
       
       <!-- form starts -->
@@ -128,19 +147,37 @@
       </div>
     </div>
 
-    <!-- footer / note with 4S credit -->
+    <!-- Facebook page link and update reminder (footer) with working link -->
+    <div class="bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 rounded-2xl p-5 mb-6 text-center border border-indigo-300 shadow-md">
+      <div class="flex flex-col items-center gap-2">
+        <div class="flex items-center gap-2 text-2xl">
+          <i class="fab fa-facebook text-indigo-600"></i>
+          <span class="font-bold text-indigo-800">4S Online Marketplace</span>
+          <i class="fab fa-facebook text-indigo-600"></i>
+        </div>
+        <p class="text-lg font-medium text-gray-700">
+          লটারির সকল আপডেট পেতে চোখ রাখুন 4S Online Marketplace এর পেজে ফেসবুক
+        </p>
+        <a href="https://www.facebook.com/share/1GzYqgH9yP/" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-full inline-flex items-center gap-2 transition shadow-md">
+          <i class="fab fa-facebook"></i> ফেসবুক পেজে যান
+        </a>
+        <p class="text-sm text-gray-500 mt-1">(ফলাফল, বিজয়ী তালিকা, পরবর্তী ড্র)</p>
+      </div>
+    </div>
+
+    <!-- footer with contact info -->
     <div class="text-center text-sm text-gray-600">
       <p>⚠️ ৪এস অনলাইন মার্কেটপ্লেস এর পক্ষ থেকে এই লটারি আয়োজন — নির্ধারিত নম্বরে টাকা পাঠানোর পর ফর্ম পূরণ করুন।</p>
       <p class="mt-1">📱 হোয়াটসঅ্যাপ নোটিফিকেশন সক্রিয় • বিকাশ/নগদ: 01709341470</p>
     </div>
   </div>
 
-  <!-- ========== একমাত্র স্ক্রিপ্ট ========== -->
+  <!-- ========== স্ক্রিপ্ট (আপনার নাম্বারগুলো এখানে) ========== -->
   <script>
     (function() {
       // ১. এখানে আপনার নাম্বারগুলো দিন (শুধু এই অংশটুকু পরিবর্তন করুন)
       const USER_BKASH_NAGAD_NUMBER = "01709341470";   // <-- আপনার বিকাশ/নগদ নম্বর
-      const MY_WHATSAPP_NUMBER = "8801709341470";      // <-- আপনার হোয়াটসঅ্যাপ নম্বর (880 দিয়ে শুরু, 017... এর জন্য 88017...)
+      const MY_WHATSAPP_NUMBER = "8801709341470";      // <-- আপনার হোয়াটসঅ্যাপ নম্বর (880 দিয়ে শুরু)
 
       // ডোম এলিমেন্ট সংগ্রহ
       const form = document.getElementById('lotteryForm');
@@ -165,7 +202,7 @@
         totalSpan.textContent = qty * 5;
       });
 
-      // ট্র্যাকিং আইডি জেনারেট করা (TR-xxxxxx)
+      // ট্র্যাকিং আইডি জেনারেট করা
       function generateId() {
         return 'TR-' + Math.random().toString(36).substr(2, 8).toUpperCase();
       }
@@ -174,16 +211,13 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // ফর্মের মান সংগ্রহ
         const name = nameInput.value.trim();
         const mobile = mobileInput.value.trim();
         const qty = parseInt(quantityInput.value) || 1;
         const txnId = txnIdInput.value.trim();
-        
-        // মোট টাকা
         const totalAmount = qty * 5;
 
-        // মৌলিক যাচাই
+        // যাচাই
         if (!name || !mobile || !txnId) {
           alert('দয়া করে সকল ঘর পূরণ করুন');
           return;
@@ -193,19 +227,16 @@
           return;
         }
 
-        // ট্র্যাকিং আইডি জেনারেট
         const trackingId = generateId();
 
-        // ইউজারকে ট্র্যাকিং আইডি দেখানো
         trackingSpan.innerText = trackingId;
         pendingMsgSpan.innerText = 'আপনার বুকিং জমা হয়েছে (pending)';
         resultBox.classList.remove('hidden');
 
-        // বাটন নিষ্ক্রিয় (যাতে বারবার ক্লিক না করে)
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> হোয়াটসঅ্যাপ খোলা হচ্ছে...`;
 
-        // হোয়াটসঅ্যাপ মেসেজ তৈরি (4S Online marketplace উল্লেখসহ)
+        // হোয়াটসঅ্যাপ মেসেজ (ফেসবুক পেজের লিংক সহ)
         const message = `🎰 *4S Online Marketplace - লটারি বুকিং*%0a%0a` +
                         `👤 *নাম:* ${name}%0a` +
                         `📱 *মোবাইল:* ${mobile}%0a` +
@@ -214,23 +245,17 @@
                         `🆔 *ট্র্যাকিং ID:* ${trackingId}%0a` +
                         `💰 *মোট টাকা:* ${totalAmount} টাকা%0a%0a` +
                         `_পেমেন্ট নম্বর (বিকাশ/নগদ):_ ${USER_BKASH_NAGAD_NUMBER}%0a` +
-                        `_4S Online marketplace এর পক্ষ থেকে এই লটারি_`;
+                        `_4S Online marketplace এর পক্ষ থেকে এই লটারি_%0a%0a` +
+                        `📢 *লটারির সকল আপডেট পেতে চোখ রাখুন 4S Online Marketplace এর পেজে ফেসবুক*%0a` +
+                        `🔗 https://www.facebook.com/share/1GzYqgH9yP/`;
 
-        // হোয়াটসঅ্যাপ লিঙ্ক তৈরি (আপনার নম্বরে মেসেজ যাবে)
         const whatsappUrl = `https://wa.me/${MY_WHATSAPP_NUMBER}?text=${message}`;
 
-        // ১.৮ সেকেন্ড পর হোয়াটসঅ্যাপে নিয়ে যাওয়া
         setTimeout(() => {
           window.open(whatsappUrl, '_blank');
-          
-          // বাটন পুনরায় সক্রিয়
           submitBtn.disabled = false;
           submitBtn.innerHTML = `<i class="fab fa-whatsapp"></i> সাবমিট ও হোয়াটসঅ্যাপ নোটিফিকেশন`;
-          
-          // ঐচ্ছিক: ফর্ম রিসেট (নিচের লাইন খুলে দিতে পারেন)
-          // form.reset(); totalSpan.textContent = '৫'; 
         }, 1800);
-        
       });
     })();
   </script>
@@ -240,11 +265,13 @@
     <details>
       <summary class="font-bold text-amber-800 cursor-pointer">⚙️ 4S Online marketplace সেটিংস</summary>
       <div class="mt-2 text-gray-700">
-        <p><span class="font-mono">🔹 বিকাশ/নগদ: 01709341470</span> — (আপনার দেওয়া নাম্বার)</p>
-        <p><span class="font-mono">🔹 হোয়াটসঅ্যাপ: 8801709341470</span> — (স্বয়ংক্রিয় সেট)</p>
-        <p>📌 লোগো "ONLINE MARKETPLACE" ও স্লোগান যুক্ত হয়েছে। ফর্ম সাবমিট করলে WhatsApp এ বিস্তারিত যাবে।</p>
+        <p><span class="font-mono">🔹 লোগো: ONLINE MARKETPLACE</span></p>
+        <p><span class="font-mono">🔹 বিকাশ/নগদ: 01709341470</span></p>
+        <p><span class="font-mono">🔹 হোয়াটসঅ্যাপ: 8801709341470</span></p>
+        <p><span class="font-mono">🔹 ফেসবুক লিংক: <a href="https://www.facebook.com/share/1GzYqgH9yP/" target="_blank" class="text-blue-600 underline">এখানে ক্লিক করুন</a></span></p>
+        <p>📌 লটারির সকল আপডেট পেতে ফেসবুক পেজ ফলো করুন</p>
       </div>
     </details>
   </div>
 </body>
-  </html>
+        </html>
